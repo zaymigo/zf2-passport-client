@@ -38,7 +38,7 @@ class ModuleOptionsFactory implements FactoryInterface
 
         $config = [];
 
-        if (array_key_exists('passport_client', $config)) {
+        if (array_key_exists('passport_client', $globalConfig)) {
             $config = $globalConfig['passport_client'];
         }
 
