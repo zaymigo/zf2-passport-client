@@ -87,7 +87,8 @@ class Service
      */
     protected function createClient()
     {
-        return new Client();
+        $clientClass = $this->getOptions()->getClient();
+        return new $clientClass;
     }
 
     /**

@@ -5,11 +5,11 @@
  * Date: 03.10.16
  * Time: 12:04
  */
-
 namespace Zaymigo\PassportClientTests;
 
 use ReflectionClass;
 use ReflectionMethod;
+use Zaymigo\PassportClient\Client\TestClient;
 use Zaymigo\PassportClient\ModuleOptions;
 use Zaymigo\PassportClient\Service;
 use Zend\Http\Client;
@@ -200,18 +200,40 @@ class ServiceTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('http://host:port/ggg/hhh', $request->getUri()->toString());
     }
 
-    public function testCreateClient()
+    public function testCreateClientWithDefaultClient()
     {
         $mock = $this->getMockBuilder(Service::class)
-            ->setMethods([])
+            ->setMethods(['getOptions'])
             ->disableOriginalConstructor()
             ->getMock();
+
+        $mock->expects($this->once())
+            ->method('getOptions')
+            ->willReturn(new ModuleOptions());
 
         $method = new ReflectionMethod(Service::class, 'createClient');
         $method->setAccessible(true);
 
         $client = $method->invoke($mock);
         $this->assertInstanceOf(Client::class, $client);
+    }
+
+    public function testCreateClientWithTestClient()
+    {
+        $mock = $this->getMockBuilder(Service::class)
+            ->setMethods(['getOptions'])
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $mock->expects($this->once())
+            ->method('getOptions')
+            ->willReturn(new ModuleOptions(['client' => TestClient::class]));
+
+        $method = new ReflectionMethod(Service::class, 'createClient');
+        $method->setAccessible(true);
+
+        $client = $method->invoke($mock);
+        $this->assertInstanceOf(TestClient::class, $client);
     }
 
     public function testBuildUrl()

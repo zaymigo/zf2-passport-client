@@ -7,6 +7,7 @@
  */
 namespace Zaymigo\PassportClient;
 
+use Zend\Http\Client;
 use Zend\Stdlib\AbstractOptions;
 
 /**
@@ -28,6 +29,13 @@ class ModuleOptions extends AbstractOptions
      * @var int
      */
     protected $port = 80;
+
+    /**
+     * Класс для клиента
+     *
+     * @var string
+     */
+    protected $client = Client::class;
 
     /**
      * @return string
@@ -59,5 +67,21 @@ class ModuleOptions extends AbstractOptions
     public function setPort($port)
     {
         $this->port = $port;
+    }
+
+    /**
+     * @return string
+     */
+    public function getClient()
+    {
+        return $this->client;
+    }
+
+    /**
+     * @param string $client
+     */
+    public function setClient($client)
+    {
+        $this->client = $client;
     }
 }
