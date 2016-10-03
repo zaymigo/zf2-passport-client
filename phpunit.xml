@@ -1,0 +1,11 @@
+<phpunit
+        backupGlobals="false"
+        colors="true"
+        verbose="true"
+        bootstrap="tests/bootstrap.php">
+    <testsuites>
+        <testsuite name="ZaymigoPassportClientTests">
+            <directory>./tests</directory>
+        </testsuite>
+    </testsuites>
+</phpunit>

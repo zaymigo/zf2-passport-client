@@ -1,17 +1,30 @@
 {
-  "name": "zaymigo/zend-passport-client",
-  "version":"1.0.0",
-  "type": "library",
-  "require": {
-      "php":">=5.3.0",
-      "zendframework/zend-http": "^2.5"
-  },
-  "require-dev": {
-      "phpunit/phpunit": "^5.5"
-  },
-  "autoload": {
-      "psr-4": {
-          "Zaymigo\\PassportClient\\": "src/"
-      }
-  }
+    "name": "zaymigo/zend-passport-client",
+    "type": "library",
+    "require": {
+        "php":">=5.3.0",
+        "zendframework/zend-http": "^2.5",
+        "zendframework/zend-modulemanager": "^2.5",
+        "zendframework/zend-servicemanager": "^2.5"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^5.5"
+    },
+    "autoload": {
+        "classmap": [
+            "./Module.php",
+            "./ModuleOptions.php"
+        ],
+        "psr-4": {
+            "Zaymigo\\PassportClient\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Zaymigo\\PassportClientTests\\": "tests/"
+        },
+        "classmap": [
+            "./tests/bootstrap.php"
+        ]
+    }
 }

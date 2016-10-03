@@ -7,48 +7,41 @@
  */
 namespace Zaymigo\PassportClient;
 
+use Zend\Http\Client;
 use Zend\Http\Request;
 
 /**
  * Class Client
  * @package Zaymigo\PassportClient
  */
-class PassportList
+class Service
 {
     /**
-     * Хост сервера
+     * Настройки
      *
-     * @var string
+     * @var ModuleOptions
      */
-    protected $host;
-
-    /**
-     * Порт сервера
-     *
-     * @var int
-     */
-    protected $port;
+    protected $options;
 
     /**
      * Client constructor.
      *
-     * @param string $host
-     * @param int $port
+     * @param ModuleOptions $options
      */
-    public function __construct($host, $port)
+    public function __construct(ModuleOptions $options)
     {
-        $this->setHost($host);
-        $this->setPort($port);
+        $this->setOptions($options);
     }
 
     /**
-     * Проверяем наличие паспорта в списке недействительных паспортов ФМС
+     * Проверяем наличие паспорта в списке недействительных паспортов ФМС,
+     * возвращаем true если паспорт валиден (отсутствует в списке)
      *
      * @param string $passport
      *
      * @return boolean
      */
-    public function hasItem($passport)
+    public function isValid($passport)
     {
         $passport = str_replace([',', ' '], '', $passport);
 
@@ -59,11 +52,11 @@ class PassportList
         }
 
         if ($response->getBody() === 'False') {
-            return false; // Отсутствует в списке
+            return true; // Отсутствует в списке
         }
 
         if ($response->getBody() === 'True') {
-            return true; // Присутствует в списке
+            return false; // Присутствует в списке
         }
 
         throw new Exception\RuntimeException($response->getBody());
@@ -75,7 +68,7 @@ class PassportList
      */
     protected function execute(Request $request)
     {
-        return (new \Zend\Http\Client())->send($request);
+        return $this->createClient()->send($request);
     }
 
     /**
@@ -90,6 +83,14 @@ class PassportList
     }
 
     /**
+     * @return Client
+     */
+    protected function createClient()
+    {
+        return new Client();
+    }
+
+    /**
      * @param $method
      * @param $argument
      *
@@ -98,23 +99,23 @@ class PassportList
     protected function buildUrl($method, $argument)
     {
         return 'http://' .
-            $this->host . ':' . $this->port .
+            $this->getOptions()->getHost() . ':' . $this->getOptions()->getPort() .
             '/' . $method . '/' . $argument;
     }
 
     /**
-     * @param string $host
+     * @return ModuleOptions
      */
-    public function setHost($host)
+    public function getOptions()
     {
-        $this->host = $host;
+        return $this->options;
     }
 
     /**
-     * @param int $port
+     * @param ModuleOptions $options
      */
-    public function setPort($port)
+    public function setOptions(ModuleOptions $options)
     {
-        $this->port = $port;
+        $this->options = $options;
     }
 }

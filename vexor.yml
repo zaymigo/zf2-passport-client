@@ -1,0 +1,21 @@
+language: php
+php:
+  - 7.0
+env:
+  global:
+    - APPLICATION_ENV=autotest
+before_install:
+  - wget https://getcomposer.org/composer.phar
+  - sudo apt-get update
+  - sudo apt-get install -y language-pack-en-base
+  - sudo LC_ALL=en_US.UTF-8 add-apt-repository ppa:ondrej/php -y
+  - sudo apt-get update
+  - sudo apt-get install -y php7.0-cli php7.0-curl php7.0-redis php7.0-memcached php7.0-geoip php7.0-mysql php7.0-mysqli php7.0-sqlite php7.0-intl php7.0-bz2 php7.0-zip php7.0-mbstring php7.0-bcmath php7.0-xml
+install:
+  - php composer.phar install
+script:
+  - php vendor/bin/phpunit
+cache:
+  enabled: true
+  directories:
+  - ~/.composer
